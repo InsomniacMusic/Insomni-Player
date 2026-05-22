@@ -9,15 +9,15 @@ use lofty::probe::Probe;
 use rodio::{Decoder, Source};
 
 #[derive(Clone)]
-pub(crate) struct Track {
-    pub(crate) path: PathBuf,
-    pub(crate) name: String,
-    pub(crate) title: Option<String>,
-    pub(crate) artist: Option<String>,
-    pub(crate) album: Option<String>,
-    pub(crate) duration: Option<Duration>,
-    pub(crate) cover_data: Option<Vec<u8>>,
-    pub(crate) track_number: Option<u32>,
+pub struct Track {
+    pub path: PathBuf,
+    pub name: String,
+    pub title: Option<String>,
+    pub artist: Option<String>,
+    pub album: Option<String>,
+    pub duration: Option<Duration>,
+    pub cover_data: Option<Vec<u8>>,
+    pub track_number: Option<u32>,
 }
 
 fn clean_meta(value: Option<String>) -> Option<String> {
@@ -27,7 +27,7 @@ fn clean_meta(value: Option<String>) -> Option<String> {
 }
 
 impl Track {
-    pub(crate) fn from_path(path: PathBuf, require_metadata: bool) -> Option<Self> {
+    pub fn from_path(path: PathBuf, require_metadata: bool) -> Option<Self> {
         let file_name = path
             .file_stem()
             .and_then(|s| s.to_str())
@@ -74,21 +74,21 @@ impl Track {
         })
     }
 
-    pub(crate) fn display_title(&self) -> &str {
+    pub fn display_title(&self) -> &str {
         self.title.as_deref().unwrap_or(&self.name)
     }
 
-    pub(crate) fn display_artist(&self) -> &str {
+    pub fn display_artist(&self) -> &str {
         self.artist.as_deref().unwrap_or("unknown artist")
     }
 }
 
-pub(crate) fn fmt_dur(d: Duration) -> String {
+pub fn fmt_dur(d: Duration) -> String {
     let s = d.as_secs();
     format!("{}:{:02}", s / 60, s % 60)
 }
 
-pub(crate) fn decode_cover(data: &[u8], ctx: &egui::Context) -> Option<TextureHandle> {
+pub fn decode_cover(data: &[u8], ctx: &egui::Context) -> Option<TextureHandle> {
     let img = image::load_from_memory(data).ok()?.to_rgba8();
     let (w, h) = img.dimensions();
     let pixels: Vec<Color32> = img
@@ -102,11 +102,7 @@ pub(crate) fn decode_cover(data: &[u8], ctx: &egui::Context) -> Option<TextureHa
     Some(ctx.load_texture("cover", color_img, TextureOptions::LINEAR))
 }
 
-pub(crate) fn decode_cover_named(
-    data: &[u8],
-    ctx: &egui::Context,
-    name: String,
-) -> Option<TextureHandle> {
+pub fn decode_cover_named(data: &[u8], ctx: &egui::Context, name: String) -> Option<TextureHandle> {
     let img = image::load_from_memory(data).ok()?.to_rgba8();
     let (w, h) = img.dimensions();
     let pixels: Vec<Color32> = img

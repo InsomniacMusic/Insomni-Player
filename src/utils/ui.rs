@@ -7,7 +7,7 @@ use super::theme::*;
 use super::track::fmt_dur;
 
 impl App {
-    pub(crate) fn track_row_fill(is_current: bool, is_hovered: bool) -> Color32 {
+    pub fn track_row_fill(is_current: bool, is_hovered: bool) -> Color32 {
         if is_current {
             Color32::from_rgb(30, 30, 38)
         } else if is_hovered {
@@ -17,7 +17,7 @@ impl App {
         }
     }
 
-    pub(crate) fn show_queue_view(
+    pub fn show_queue_view(
         &mut self,
         ui: &mut egui::Ui,
         current_idx: Option<usize>,
@@ -171,7 +171,7 @@ impl App {
         }
     }
 
-    pub(crate) fn artist_card(
+    pub fn artist_card(
         ui: &mut egui::Ui,
         artist: &str,
         track_count: usize,
@@ -219,7 +219,7 @@ impl App {
         resp
     }
 
-    pub(crate) fn show_artist_grid(
+    pub fn show_artist_grid(
         &mut self,
         ui: &mut egui::Ui,
         current_idx: Option<usize>,
@@ -373,7 +373,7 @@ impl App {
         }
     }
 
-    pub(crate) fn album_card(
+    pub fn album_card(
         ui: &mut egui::Ui,
         album: &str,
         artist: Option<&str>,
@@ -450,7 +450,7 @@ impl App {
         resp
     }
 
-    pub(crate) fn show_album_grid(
+    pub fn show_album_grid(
         &mut self,
         ctx: &egui::Context,
         ui: &mut egui::Ui,

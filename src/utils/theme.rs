@@ -1,13 +1,13 @@
 use egui::{Color32, Rounding, Stroke, Vec2, Visuals};
 
-pub(crate) const ACCENT: Color32 = Color32::from_rgb(220, 220, 228);
-pub(crate) const BG: Color32 = Color32::from_rgb(13, 13, 13);
-pub(crate) const SURFACE: Color32 = Color32::from_rgb(22, 22, 22);
-pub(crate) const SURFACE2: Color32 = Color32::from_rgb(32, 32, 32);
-pub(crate) const TEXT_DIM: Color32 = Color32::from_rgb(100, 100, 110);
-pub(crate) const TEXT_MID: Color32 = Color32::from_rgb(170, 170, 180);
+pub const ACCENT: Color32 = Color32::from_rgb(220, 220, 228);
+pub const BG: Color32 = Color32::from_rgb(13, 13, 13);
+pub const SURFACE: Color32 = Color32::from_rgb(22, 22, 22);
+pub const SURFACE2: Color32 = Color32::from_rgb(32, 32, 32);
+pub const TEXT_DIM: Color32 = Color32::from_rgb(100, 100, 110);
+pub const TEXT_MID: Color32 = Color32::from_rgb(170, 170, 180);
 
-pub(crate) fn apply_theme(ctx: &egui::Context) {
+pub fn apply_theme(ctx: &egui::Context) {
     let mut v = Visuals::dark();
     v.override_text_color = Some(Color32::from_rgb(210, 210, 215));
     v.panel_fill = BG;

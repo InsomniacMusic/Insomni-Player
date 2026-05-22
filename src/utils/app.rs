@@ -11,30 +11,30 @@ use super::theme::*;
 use super::track::{Track, decode_cover, fmt_dur};
 
 pub struct App {
-    pub(crate) tracks: Vec<Track>,
-    pub(crate) current: Option<usize>,
-    pub(crate) is_playing: bool,
-    pub(crate) volume: f32,
-    pub(crate) seek_frac: f32,
-    pub(crate) theme_applied: bool,
-    pub(crate) library_view: LibraryView,
-    pub(crate) expanded_artist: Option<String>,
-    pub(crate) expanded_album: Option<String>,
-    pub(crate) hovered_track: Option<usize>,
-    pub(crate) album_textures: BTreeMap<String, TextureHandle>,
+    pub tracks: Vec<Track>,
+    pub current: Option<usize>,
+    pub is_playing: bool,
+    pub volume: f32,
+    pub seek_frac: f32,
+    pub theme_applied: bool,
+    pub library_view: LibraryView,
+    pub expanded_artist: Option<String>,
+    pub expanded_album: Option<String>,
+    pub hovered_track: Option<usize>,
+    pub album_textures: BTreeMap<String, TextureHandle>,
 
-    pub(crate) cover_texture: Option<TextureHandle>,
-    pub(crate) cover_for: Option<usize>,
+    pub cover_texture: Option<TextureHandle>,
+    pub cover_for: Option<usize>,
 
-    pub(crate) stream: rodio::MixerDeviceSink,
-    pub(crate) sink: Arc<Mutex<Player>>,
-    pub(crate) playback_offset: Duration,
+    pub stream: rodio::MixerDeviceSink,
+    pub sink: Arc<Mutex<Player>>,
+    pub playback_offset: Duration,
 
-    pub(crate) shuffle: bool,
-    pub(crate) shuffle_seed: u64,
-    pub(crate) play_queue: Vec<usize>,
-    pub(crate) queue_pos: Option<usize>,
-    pub(crate) shuffle_history: Vec<usize>,
+    pub shuffle: bool,
+    pub shuffle_seed: u64,
+    pub play_queue: Vec<usize>,
+    pub queue_pos: Option<usize>,
+    pub shuffle_history: Vec<usize>,
 }
 
 impl App {
@@ -75,7 +75,7 @@ impl App {
         app
     }
 
-    pub(crate) fn open_files(&mut self) {
+    pub fn open_files(&mut self) {
         if let Some(paths) = rfd::FileDialog::new()
             .add_filter("audio", &["mp3", "flac", "wav", "ogg"])
             .set_title("add tracks")
@@ -87,7 +87,7 @@ impl App {
         }
     }
 
-    pub(crate) fn play_track(&mut self, idx: usize) {
+    pub fn play_track(&mut self, idx: usize) {
         let track = match self.tracks.get(idx) {
             Some(t) => t.clone(),
             None => return,
@@ -114,7 +114,7 @@ impl App {
         self.playback_offset = Duration::ZERO;
     }
 
-    pub(crate) fn seek_to(&mut self, seconds: f32) {
+    pub fn seek_to(&mut self, seconds: f32) {
         let seek_target = Duration::from_secs_f32(seconds);
 
         let sink = self.sink.lock().unwrap();
@@ -135,7 +135,7 @@ impl App {
         }
     }
 
-    pub(crate) fn toggle_pause(&mut self) {
+    pub fn toggle_pause(&mut self) {
         let sink = self.sink.lock().unwrap();
 
         if sink.is_paused() {
@@ -147,7 +147,7 @@ impl App {
         }
     }
 
-    pub(crate) fn stop(&mut self) {
+    pub fn stop(&mut self) {
         self.sink.lock().unwrap().stop();
         self.is_playing = false;
         self.seek_frac = 0.0;

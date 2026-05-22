@@ -8,7 +8,7 @@ use super::app::App;
 use super::track::{Track, decode_cover_named};
 
 #[derive(Clone, Copy, PartialEq, Eq)]
-pub(crate) enum LibraryView {
+pub enum LibraryView {
     Tracks,
     Artists,
     Albums,
@@ -16,12 +16,12 @@ pub(crate) enum LibraryView {
 }
 
 #[derive(Clone)]
-pub(crate) struct AlbumGroup {
-    pub(crate) key: String,
-    pub(crate) album: String,
-    pub(crate) artist: Option<String>,
-    pub(crate) indices: Vec<usize>,
-    pub(crate) cover_track: Option<usize>,
+pub struct AlbumGroup {
+    pub key: String,
+    pub album: String,
+    pub artist: Option<String>,
+    pub indices: Vec<usize>,
+    pub cover_track: Option<usize>,
 }
 
 impl App {
@@ -65,7 +65,7 @@ impl App {
         }
     }
 
-    pub(crate) fn is_audio_file(path: &Path) -> bool {
+    pub fn is_audio_file(path: &Path) -> bool {
         path.extension()
             .and_then(|e| e.to_str())
             .map(|e| {
@@ -77,7 +77,7 @@ impl App {
             .unwrap_or(false)
     }
 
-    pub(crate) fn collect_audio_files(dir: &Path, out: &mut Vec<PathBuf>) {
+    pub fn collect_audio_files(dir: &Path, out: &mut Vec<PathBuf>) {
         let Ok(entries) = fs::read_dir(dir) else {
             return;
         };
@@ -93,7 +93,7 @@ impl App {
         }
     }
 
-    pub(crate) fn add_track_path(&mut self, path: PathBuf, require_metadata: bool) {
+    pub fn add_track_path(&mut self, path: PathBuf, require_metadata: bool) {
         if self.tracks.iter().any(|t| t.path == path) {
             return;
         }
@@ -117,7 +117,7 @@ impl App {
         }
     }
 
-    pub(crate) fn active_context_queue(&self) -> Vec<usize> {
+    pub fn active_context_queue(&self) -> Vec<usize> {
         match self.library_view {
             LibraryView::Albums => {
                 if let Some(expanded_key) = &self.expanded_album {
@@ -153,7 +153,7 @@ impl App {
         }
     }
 
-    pub(crate) fn sync_queue_with_context_if_current_inside(&mut self) {
+    pub fn sync_queue_with_context_if_current_inside(&mut self) {
         let Some(current) = self.current else {
             return;
         };
@@ -181,7 +181,7 @@ impl App {
         self.shuffle_history.push(pos);
     }
 
-    pub(crate) fn track_visible_in_view(track: &Track, view: LibraryView) -> bool {
+    pub fn track_visible_in_view(track: &Track, view: LibraryView) -> bool {
         match view {
             LibraryView::Tracks => true,
             LibraryView::Artists => track.artist.is_some(),
@@ -190,7 +190,7 @@ impl App {
         }
     }
 
-    pub(crate) fn current_view_queue(&self) -> Vec<usize> {
+    pub fn current_view_queue(&self) -> Vec<usize> {
         if self.library_view == LibraryView::Queue {
             return self.play_queue.clone();
         }
@@ -246,7 +246,7 @@ impl App {
         queue
     }
 
-    pub(crate) fn artist_initials(name: &str) -> String {
+    pub fn artist_initials(name: &str) -> String {
         let words: Vec<&str> = name.split_whitespace().collect();
 
         if words.len() == 1 {
@@ -261,14 +261,14 @@ impl App {
             .to_uppercase()
     }
 
-    pub(crate) fn artist_section_letter(name: &str) -> String {
+    pub fn artist_section_letter(name: &str) -> String {
         name.chars()
             .next()
             .map(|c| c.to_uppercase().to_string())
             .unwrap_or_else(|| "#".to_string())
     }
 
-    pub(crate) fn short_text(text: &str, max_chars: usize) -> String {
+    pub fn short_text(text: &str, max_chars: usize) -> String {
         let count = text.chars().count();
 
         if count <= max_chars {
@@ -283,7 +283,7 @@ impl App {
         }
     }
 
-    pub(crate) fn artist_groups(&self) -> Vec<(String, Vec<usize>)> {
+    pub fn artist_groups(&self) -> Vec<(String, Vec<usize>)> {
         let mut groups: BTreeMap<String, Vec<usize>> = BTreeMap::new();
 
         for (i, track) in self.tracks.iter().enumerate() {
@@ -311,7 +311,7 @@ impl App {
         groups
     }
 
-    pub(crate) fn album_groups(&self) -> Vec<AlbumGroup> {
+    pub fn album_groups(&self) -> Vec<AlbumGroup> {
         let mut groups: BTreeMap<String, AlbumGroup> = BTreeMap::new();
 
         for (i, track) in self.tracks.iter().enumerate() {
@@ -365,7 +365,7 @@ impl App {
         groups
     }
 
-    pub(crate) fn get_album_cover_texture(
+    pub fn get_album_cover_texture(
         &mut self,
         ctx: &egui::Context,
         key: &str,

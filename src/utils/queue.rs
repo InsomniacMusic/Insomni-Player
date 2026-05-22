@@ -1,7 +1,7 @@
 use super::app::App;
 
 impl App {
-    pub(crate) fn set_queue_and_play(&mut self, idx: usize, mut queue: Vec<usize>) {
+    pub fn set_queue_and_play(&mut self, idx: usize, mut queue: Vec<usize>) {
         if queue.is_empty() {
             queue.push(idx);
         }
@@ -16,7 +16,7 @@ impl App {
         self.play_track(idx);
     }
 
-    pub(crate) fn play_queued_at(&mut self, pos: usize, record_history: bool) {
+    pub fn play_queued_at(&mut self, pos: usize, record_history: bool) {
         let Some(idx) = self.play_queue.get(pos).copied() else {
             return;
         };
@@ -30,7 +30,7 @@ impl App {
         self.play_track(idx);
     }
 
-    pub(crate) fn ensure_queue(&mut self) {
+    pub fn ensure_queue(&mut self) {
         if !self.play_queue.is_empty() {
             return;
         }
@@ -46,7 +46,7 @@ impl App {
             .and_then(|idx| self.play_queue.iter().position(|&i| i == idx));
     }
 
-    pub(crate) fn random_queue_pos(&mut self) -> Option<usize> {
+    pub fn random_queue_pos(&mut self) -> Option<usize> {
         let len = self.play_queue.len();
 
         if len == 0 {
@@ -85,7 +85,7 @@ impl App {
         Some((current + 1) % len)
     }
 
-    pub(crate) fn play_next(&mut self) {
+    pub fn play_next(&mut self) {
         if self.tracks.is_empty() {
             return;
         }
@@ -113,7 +113,7 @@ impl App {
         }
     }
 
-    pub(crate) fn play_previous(&mut self) {
+    pub fn play_previous(&mut self) {
         if self.tracks.is_empty() {
             return;
         }
