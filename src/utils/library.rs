@@ -25,21 +25,43 @@ pub(crate) struct AlbumGroup {
 }
 
 impl App {
-    pub(crate) fn default_music_dir() -> Option<PathBuf> {
-        #[cfg(target_os = "windows")]
+    fn default_music_dirs() -> Vec<PathBuf> {
+        #[cfg(target_os = "android")]
         {
-            std::env::var_os("USERPROFILE")
-                .map(PathBuf::from)
-                .map(|p| p.join("Music"))
-                .filter(|p| p.exists())
+            // Android doesnt work the same as desktop file systems (windows, mac, linux).
+            // Later this should be replaced with MediaStore / SAF picker results.
+            Vec::new()
         }
 
-        #[cfg(not(target_os = "windows"))]
+        #[cfg(not(target_os = "android"))]
         {
-            std::env::var_os("HOME")
-                .map(PathBuf::from)
-                .map(|p| p.join("Music"))
-                .filter(|p| p.exists())
+            let mut dirs = Vec::new();
+
+            if let Some(audio_dir) = dirs::audio_dir() {
+                dirs.push(audio_dir);
+            }
+
+            #[cfg(target_os = "windows")]
+            {
+                if let Some(profile) = std::env::var_os("USERPROFILE") {
+                    let music = PathBuf::from(profile).join("Music");
+                    if music.exists() && !dirs.contains(&music) {
+                        dirs.push(music);
+                    }
+                }
+            }
+
+            #[cfg(any(target_os = "macos", target_os = "linux"))]
+            {
+                if let Some(home) = std::env::var_os("HOME") {
+                    let music = PathBuf::from(home).join("Music");
+                    if music.exists() && !dirs.contains(&music) {
+                        dirs.push(music);
+                    }
+                }
+            }
+
+            dirs
         }
     }
 
@@ -81,17 +103,17 @@ impl App {
         }
     }
 
-    pub(crate) fn scan_music_dir(&mut self) {
-        let Some(music_dir) = Self::default_music_dir() else {
-            return;
-        };
+    pub fn scan_music_dir(&mut self) {
+        let music_dirs = Self::default_music_dirs();
 
-        let mut paths = Vec::new();
-        Self::collect_audio_files(&music_dir, &mut paths);
-        paths.sort();
+        for music_dir in music_dirs {
+            let mut paths = Vec::new();
+            Self::collect_audio_files(&music_dir, &mut paths);
+            paths.sort();
 
-        for path in paths {
-            self.add_track_path(path, true);
+            for path in paths {
+                self.add_track_path(path, true);
+            }
         }
     }
 

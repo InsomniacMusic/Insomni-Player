@@ -19,6 +19,7 @@ lto = "thin"
 codegen-units = 1
 panic = "abort"
 strip = true
+dirs = "5"
 
 [profile.dev]
 opt-level = 1
